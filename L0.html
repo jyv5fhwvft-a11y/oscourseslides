@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CS 301 · L00 · Course Introduction</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: #0F172A;
+    color: #E2E8F0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 6vh 8vw;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    text-align: center;
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 999px;
+    margin-bottom: 3vh;
+    border: 2px solid;
+  }
+
+  .badge-blue { color: #60A5FA; border-color: #3B82F6; background: rgba(59,130,246,0.08); }
+  .badge-amber { color: #FBBF24; border-color: #F59E0B; background: rgba(245,158,11,0.08); }
+  .badge-emerald { color: #34D399; border-color: #10B981; background: rgba(16,185,129,0.08); }
+  .badge-violet { color: #A78BFA; border-color: #8B5CF6; background: rgba(139,92,246,0.08); }
+  .badge-crimson { color: #F87171; border-color: #EF4444; background: rgba(239,68,68,0.08); }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 2vh;
+    letter-spacing: -0.02em;
+  }
+
+  h2 {
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 2vh;
+    color: #F1F5F9;
+  }
+
+  .subtitle {
+    font-size: clamp(1rem, 1.6vw, 1.3rem);
+    color: #94A3B8;
+    max-width: 900px;
+    line-height: 1.5;
+    margin-bottom: 2.5vh;
+  }
+
+  .accent-line {
+    width: 80px;
+    height: 4px;
+    background: #3B82F6;
+    border-radius: 2px;
+    margin: 2vh auto;
+  }
+
+  .callout {
+    max-width: 820px;
+    padding: 20px 26px;
+    border-left: 4px solid #F59E0B;
+    background: rgba(245,158,11,0.06);
+    border-radius: 6px;
+    color: #FCD34D;
+    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+    line-height: 1.55;
+    margin-top: 3vh;
+    text-align: left;
+  }
+
+  .card-grid {
+    display: grid;
+    gap: 1.5vw;
+    width: 100%;
+    max-width: 1100px;
+    margin-top: 2vh;
+  }
+
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-5 { grid-template-columns: repeat(5, 1fr); }
+
+  .card {
+    padding: 3vh 2vw;
+    border: 2px solid #1E293B;
+    border-radius: 12px;
+    background: #111C33;
+    text-align: left;
+  }
+
+  .card h3 {
+    font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+    font-weight: 700;
+    color: #60A5FA;
+    margin-bottom: 1.2vh;
+  }
+
+  .card p {
+    font-size: clamp(0.85rem, 1.1vw, 1rem);
+    color: #94A3B8;
+    line-height: 1.5;
+  }
+
+  .card.amber h3 { color: #FBBF24; }
+  .card.amber { border-color: #78350F; }
+  .card.emerald h3 { color: #34D399; }
+  .card.emerald { border-color: #064E3B; }
+
+  .metaphor-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3vw;
+    max-width: 1200px;
+    text-align: left;
+    margin-top: 3vh;
+  }
+
+  .metaphor-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4vh 2vw;
+    border: 2px dashed #1E293B;
+    border-radius: 12px;
+    background: #0B1327;
+    min-height: 280px;
+    font-size: 4rem;
+  }
+
+  .metaphor-text h3 {
+    font-size: clamp(1.1rem, 1.4vw, 1.25rem);
+    font-weight: 700;
+    color: #FBBF24;
+    margin-bottom: 1.5vh;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .metaphor-text p {
+    font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+    color: #CBD5E1;
+    line-height: 1.6;
+    margin-bottom: 2vh;
+  }
+
+  .metaphor-label {
+    display: block;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #F59E0B;
+    margin-bottom: 0.5vh;
+    font-weight: 700;
+  }
+
+  .code-block {
+    background: #020617;
+    border: 1px solid #1E293B;
+    border-radius: 12px;
+    padding: 2vh 2vw;
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: clamp(0.75rem, 1vw, 0.9rem);
+    color: #94A3B8;
+    text-align: left;
+    max-width: 1100px;
+    width: 100%;
+    overflow: auto;
+    max-height: 60vh;
+    line-height: 1.55;
+  }
+
+  .code-block .kw { color: #C084FC; }
+  .code-block .str { color: #86EFAC; }
+  .code-block .cm { color: #475569; font-style: italic; }
+  .code-block .fn { color: #60A5FA; }
+  .code-block .num { color: #FBBF24; }
+
+  .terminal {
+    background: #020617;
+    border: 1px solid #1E293B;
+    border-radius: 12px;
+    padding: 2vh 2vw;
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: clamp(0.75rem, 1vw, 0.9rem);
+    color: #86EFAC;
+    text-align: left;
+    max-width: 1000px;
+    width: 100%;
+    line-height: 1.7;
+  }
+
+  .terminal .cmd { color: #60A5FA; }
+  .terminal .out { color: #94A3B8; }
+
+  .mindmap {
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: clamp(0.75rem, 1vw, 0.95rem);
+    color: #94A3B8;
+    text-align: left;
+    background: #020617;
+    border: 1px solid #1E293B;
+    border-radius: 12px;
+    padding: 2.5vh 2vw;
+    max-width: 900px;
+    width: 100%;
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+
+  .mindmap .active { color: #60A5FA; font-weight: 700; }
+
+  .takeaway-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    max-width: 900px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .takeaway-item {
+    display: flex;
+    gap: 1.5vw;
+    padding: 2vh 2vw;
+    border-left: 4px solid #3B82F6;
+    background: rgba(59,130,246,0.05);
+    border-radius: 6px;
+  }
+
+  .takeaway-num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #60A5FA;
+    min-width: 40px;
+  }
+
+  .takeaway-item p {
+    font-size: clamp(0.9rem, 1.2vw, 1.05rem);
+    color: #CBD5E1;
+    line-height: 1.55;
+  }
+
+  .gateway-arrow {
+    font-size: 5rem;
+    color: #10B981;
+    margin: 2vh 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: translateX(0); }
+    50% { opacity: 0.7; transform: translateX(10px); }
+  }
+
+  .nav {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.85rem;
+    color: #475569;
+    z-index: 100;
+    font-family: "SF Mono", "Menlo", monospace;
+  }
+
+  .nav-btn {
+    background: #1E293B;
+    color: #CBD5E1;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .nav-btn:hover { background: #334155; color: #fff; }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .progress {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: #1E293B;
+    z-index: 100;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+    transition: width 0.35s ease;
+  }
+
+  .slide-title-tag {
+    position: fixed;
+    top: 20px;
+    left: 30px;
+    font-size: 0.8rem;
+    color: #475569;
+    font-family: "SF Mono", "Menlo", monospace;
+    letter-spacing: 0.1em;
+    z-index: 100;
+  }
+
+  .hint {
+    font-size: 0.85rem;
+    color: #475569;
+    margin-top: 3vh;
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-5 { grid-template-columns: 1fr; }
+    .metaphor-layout { grid-template-columns: 1fr; }
+    .slide { padding: 4vh 5vw; }
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-title-tag">CS 301 · L00</div>
+
+<div class="deck" id="deck">
+
+  <!-- ===== SLIDE 01 ===== -->
+  <section class="slide active">
+    <span class="badge badge-blue">🔰 START HERE // L00 LEARNING OBJECTIVES</span>
+    <h1>The Core Objective</h1>
+    <div class="accent-line"></div>
+    <p class="subtitle">
+      State in one clear sentence why an operating system exists, and name the core hardware resources it arbitrates.
+    </p>
+    <div class="callout">
+      <strong>The Problem Hook:</strong> A modern computer has one or two CPUs, some gigabytes of RAM, and a handful of storage devices. Yet right now, hundreds of programs are all simultaneously convinced they own the entire machine. How does this not collapse into chaos?
+    </div>
+    <p class="hint">Press → to begin</p>
+  </section>
+
+  <!-- ===== SLIDE 02 ===== -->
+  <section class="slide">
+    <span class="badge badge-amber">🛑 ENTRY BARRIERS: REQUIREMENT DIRECTIVES</span>
+    <h2>Structural Prerequisites</h2>
+    <div class="accent-line" style="background:#F59E0B"></div>
+    <div class="card-grid grid-3" style="margin-top:4vh">
+      <div class="card amber">
+        <h3>01 · Everyday Computing</h3>
+        <p>Basic familiarity with running programs — opening files, using a terminal, typing commands like <code>ls</code> and <code>cd</code>.</p>
+      </div>
+      <div class="card amber">
+        <h3>02 · Hardware Awareness</h3>
+        <p>Elementary knowledge of what a CPU, RAM, and storage disk do — no architecture expertise required.</p>
+      </div>
+      <div class="card amber">
+        <h3>03 · Curiosity</h3>
+        <p>A willingness to look under the hood — this course will not shy away from registers, memory addresses, syscalls, and the messy machinery underneath modern apps.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 03 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">🎒 EVERYDAY SIMPLIFIED: THE AIR TRAFFIC CONTROL TOWER</span>
+    <h2>The Referee Metaphor</h2>
+    <div class="metaphor-layout">
+      <div class="metaphor-visual">✈️ 🗼 ✈️</div>
+      <div class="metaphor-text">
+        <span class="metaphor-label">The Narrative</span>
+        <p>A busy international airport has a single concrete runway. Fifty pilots — Chrome, VS Code, Spotify, Discord, Terminal — all want to land at the exact same second. If every pilot acted selfishly, they would collide in midair. The Operating System is the air traffic controller in the tower — it does not fly the planes, but it decides who gets to use the runway, in what order, and for how long.</p>
+        <span class="metaphor-label">Execution Path</span>
+        <p>The OS does not do the "flying" — it does the coordination.</p>
+        <span class="metaphor-label">Micro-Accessibility Context</span>
+        <p>The OS is a resource <em>arbitrator</em>, not a resource <em>user</em>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 04 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">🎒 EVERYDAY SIMPLIFIED: THE HOTEL CONCIERGE</span>
+    <h2>The Resource Manager Metaphor</h2>
+    <div class="metaphor-layout">
+      <div class="metaphor-visual">🏨 🛎️</div>
+      <div class="metaphor-text">
+        <span class="metaphor-label">The Narrative</span>
+        <p>A hotel has finite resources: rooms, chefs, cars. Guests arrive with independent needs and no coordination with each other. The concierge desk allocates rooms, dispatches wake-up calls, and arranges taxis — all while ensuring no guest gets their room triple-booked.</p>
+        <span class="metaphor-label">Execution Path</span>
+        <p>The OS is the service layer that turns raw hardware into a smooth guest experience.</p>
+        <span class="metaphor-label">Micro-Accessibility Context</span>
+        <p>This emphasizes fairness — every guest has a claim to service.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 05 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">🎒 EVERYDAY SIMPLIFIED: THE CAR DASHBOARD</span>
+    <h2>The Abstraction Metaphor</h2>
+    <div class="metaphor-layout">
+      <div class="metaphor-visual">🚗 📊</div>
+      <div class="metaphor-text">
+        <span class="metaphor-label">The Narrative</span>
+        <p>A driver does not need to understand how fuel injection works to drive the car. The dashboard abstracts the engine — it presents simple controls (gas pedal, brake, steering wheel) that hide extreme complexity.</p>
+        <span class="metaphor-label">Execution Path</span>
+        <p>The OS abstracts raw hardware behind clean interfaces: files, processes, sockets.</p>
+        <span class="metaphor-label">Micro-Accessibility Context</span>
+        <p>This is the <em>abstraction provider</em> role — alongside the resource arbitrator role.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 06 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">🎒 EVERYDAY SIMPLIFIED: THE MULTI-TENANT BUILDING</span>
+    <h2>The Competing Claim Metaphor</h2>
+    <div class="metaphor-layout">
+      <div class="metaphor-visual">🏢 🔐 🏢</div>
+      <div class="metaphor-text">
+        <span class="metaphor-label">The Narrative</span>
+        <p>Each tenant in a multi-tenant building acts <em>exactly</em> as if they own the whole building. They paint their walls and set their schedules — never coordinating with other tenants. But they all share the same electric grid, plumbing, and foundation.</p>
+        <span class="metaphor-label">Execution Path</span>
+        <p>Each process believes it owns the machine. The OS provides both isolation and resource sharing.</p>
+        <span class="metaphor-label">Micro-Accessibility Context</span>
+        <p>This sets up the central tension of the course: <strong>isolation vs. sharing</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 07 ===== -->
+  <section class="slide">
+    <span class="badge badge-emerald">🎒 EVERYDAY SIMPLIFIED: THE REFEREE-ABSTRACTION SUITE</span>
+    <h2>The Summary Metaphor</h2>
+    <div class="card-grid grid-2" style="margin-top:4vh">
+      <div class="card">
+        <h3>🛡️ Resource Arbitrator</h3>
+        <p>Arbitrates access to shared, finite resources — CPU time, memory, storage, network. Ensures fairness and prevents collisions.</p>
+      </div>
+      <div class="card emerald">
+        <h3>🧭 Abstraction Provider</h3>
+        <p>Presents simple, uniform interfaces — files, processes, sockets — that hide raw hardware complexity from applications.</p>
+      </div>
+    </div>
+    <p class="subtitle" style="margin-top:4vh">
+      Neither role exists in isolation: the referee needs abstraction to make resources manageable; abstraction needs the referee to make resources shared safely. Together, they turn raw silicon into the modern computing environment.
+    </p>
+  </section>
+
+  <!-- ===== SLIDE 08 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">💻 SYSTEMS COHESION: THE DEFINITION AND SCOPE</span>
+    <h2>What an Operating System Actually Is</h2>
+    <div class="accent-line"></div>
+    <div class="card-grid grid-3" style="margin-top:3vh">
+      <div class="card">
+        <h3>Bottom · Hardware</h3>
+        <p>CPU cores, RAM, disks, network cards — raw silicon, difficult to program directly.</p>
+      </div>
+      <div class="card">
+        <h3>Middle · Kernel (Ring 0)</h3>
+        <p>The privileged core. Manages processes, memory, filesystems, devices, networking. All CS 301 code lives here.</p>
+      </div>
+      <div class="card emerald">
+        <h3>Top · User Space (Ring 3)</h3>
+        <p>Applications — Chrome, VS Code, Python. The programs users actually care about.</p>
+      </div>
+    </div>
+    <div class="callout" style="border-color:#3B82F6;background:rgba(59,130,246,0.06);color:#93C5FD;margin-top:4vh">
+      <strong>The Definition:</strong> The OS is the software layer between applications and hardware. Its job is to make hardware safe, fair, fast, and easy to use. It is not the applications — it enables them.
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 09 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">💻 SYSTEMS COHESION: THE ARBITRATION TRIAD</span>
+    <h2>The Three Core Resources</h2>
+    <div class="card-grid grid-3" style="margin-top:4vh">
+      <div class="card">
+        <h3>⚙️ CPU Time</h3>
+        <p>Millions of instructions per second, but only one stream per core at a time.</p>
+        <p style="margin-top:1vh;color:#60A5FA"><strong>Module 2 · L05–L09</strong></p>
+        <p>PCB · fork/exec · MLFQ scheduler</p>
+      </div>
+      <div class="card">
+        <h3>🧠 Physical Memory</h3>
+        <p>Finite RAM gigabytes, each byte allocated or free.</p>
+        <p style="margin-top:1vh;color:#60A5FA"><strong>Module 3 · L10–L13</strong></p>
+        <p>Paging · virtual memory · TLB · demand paging</p>
+      </div>
+      <div class="card">
+        <h3>💾 Persistent Storage</h3>
+        <p>Finite disk space, organized into blocks.</p>
+        <p style="margin-top:1vh;color:#60A5FA"><strong>Module 5 · L16–L19</strong></p>
+        <p>Inodes · paths · journaling</p>
+      </div>
+    </div>
+    <p class="subtitle" style="margin-top:4vh">
+      Plus: <strong>I/O devices</strong> (M6 · L20–L21), <strong>synchronization</strong> (M4 · L14–L15), <strong>security</strong> (M7 · L22–L27), and <strong>structure</strong> (M1 · L00–L04).
+    </p>
+  </section>
+
+  <!-- ===== SLIDE 10 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">💻 SYSTEMS COHESION: THE EVOLUTIONARY TIMELINE</span>
+    <h2>The Historical Arc</h2>
+    <div class="card-grid grid-2" style="margin-top:3vh">
+      <div class="card">
+        <h3>1950s · Batch Processing</h3>
+        <p>The CPU sat idle while users typed punch cards.</p>
+        <p style="margin-top:1vh;color:#FBBF24"><strong>Innovation:</strong> Batch job queues.</p>
+      </div>
+      <div class="card">
+        <h3>1960s · Multiprogramming</h3>
+        <p>When one job blocked on I/O, another ran on the CPU.</p>
+        <p style="margin-top:1vh;color:#FBBF24"><strong>Innovation:</strong> Context switches + I/O interrupts.</p>
+      </div>
+      <div class="card">
+        <h3>1970s · Time-Sharing</h3>
+        <p>Multiple interactive users shared one mainframe.</p>
+        <p style="margin-top:1vh;color:#FBBF24"><strong>Innovation:</strong> Preemption + virtual memory.</p>
+      </div>
+      <div class="card emerald">
+        <h3>1980s–Present · Personal & Cloud</h3>
+        <p>One OS per user, then virtualized cloud infrastructure.</p>
+        <p style="margin-top:1vh;color:#34D399"><strong>Innovation:</strong> Sandboxing · containers · virtualization.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 11 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">💻 SYSTEMS COHESION: THE KERNEL COMPONENT MAP</span>
+    <h2>The Kernel's Six Subsystems</h2>
+    <div class="card-grid grid-3" style="margin-top:3vh">
+      <div class="card"><h3>1 · Process Manager</h3><p><strong>L05–L09</strong> · task_struct · fork · exec · wait</p></div>
+      <div class="card"><h3>2 · Scheduler</h3><p><strong>L07–L08</strong> · run queue · priority · time slice</p></div>
+      <div class="card"><h3>3 · Memory Manager</h3><p><strong>L10–L13</strong> · page tables · TLB · swap</p></div>
+      <div class="card"><h3>4 · File System</h3><p><strong>L16–L19</strong> · inodes · directories · journaling</p></div>
+      <div class="card"><h3>5 · Device Drivers</h3><p><strong>L20–L21</strong> · file_operations · IRQs · DMA</p></div>
+      <div class="card"><h3>6 · Network Stack</h3><p><strong>L21 · L25 · L26</strong> · sockets · TCP/IP · TLS</p></div>
+    </div>
+    <p class="subtitle" style="margin-top:3vh">
+      Plus cross-cutting: <strong>Synchronization</strong> (M4) · <strong>Security</strong> (M7) · <strong>Structure</strong> (M1).
+    </p>
+  </section>
+
+  <!-- ===== SLIDE 12 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">💻 SYSTEMS COHESION: THE USER-KERNEL BOUNDARY</span>
+    <h2>The System Call Interface</h2>
+    <div class="accent-line"></div>
+    <p class="subtitle" style="max-width:850px">
+      The system call interface is the <strong>only</strong> channel through which user code can request kernel services.
+    </p>
+    <div class="card-grid grid-2" style="margin-top:3vh">
+      <div class="card">
+        <h3>User Side (Ring 3)</h3>
+        <p>Calls a libc wrapper: <code>fork()</code>, <code>read()</code>, <code>mmap()</code> — which executes the <code>syscall</code> assembly instruction.</p>
+      </div>
+      <div class="card emerald">
+        <h3>Kernel Side (Ring 0)</h3>
+        <p>Handler looks up the syscall number, dispatches to the correct routine, validates arguments, executes the operation, returns.</p>
+      </div>
+    </div>
+    <div class="callout" style="border-color:#3B82F6;background:rgba(59,130,246,0.06);color:#93C5FD;margin-top:4vh">
+      <strong>Common syscalls:</strong> fork · open · read · write · mmap · execve · exit · sched_yield
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 13 ===== -->
+  <section class="slide">
+    <span class="badge badge-violet">🔗 SYSTEM PIPELINE: ESTABLISHES THE FULL ROADMAP</span>
+    <h2>Core System Cohesion — Feeds Into All Modules</h2>
+    <div class="card-grid grid-2" style="margin-top:3vh">
+      <div class="card"><h3>Module 1 · L01–L04</h3><p>Structure: architecture, privilege barrier, syscall gate, boot process.</p></div>
+      <div class="card"><h3>Module 2 · L05–L09</h3><p>CPU arbitration: process, fork/exec, scheduler, threads.</p></div>
+      <div class="card"><h3>Module 3 · L10–L13</h3><p>Memory arbitration: paging, TLB, virtual memory.</p></div>
+      <div class="card"><h3>Module 4 · L14–L15</h3><p>Coordination: mutexes, deadlock.</p></div>
+      <div class="card"><h3>Module 5 · L16–L19</h3><p>Storage: geometry, inodes, journaling.</p></div>
+      <div class="card"><h3>Module 6 · L20–L21</h3><p>I/O: interrupts, DMA, drivers.</p></div>
+    </div>
+    <p class="subtitle" style="margin-top:3vh">
+      <strong>Module 7 · L22–L28</strong> — Security: ACLs, auth, crypto, isolation, and the grand retrospective.
+    </p>
+  </section>
+
+  <!-- ===== SLIDE 14 ===== -->
+  <section class="slide">
+    <span class="badge badge-violet">🔗 SYSTEM PIPELINE: THE THREE FOUNDATIONAL TENSIONS</span>
+    <h2>The Three Recurring Tensions</h2>
+    <div class="card-grid grid-3" style="margin-top:4vh">
+      <div class="card">
+        <h3>Isolation vs. Sharing</h3>
+        <p>Multi-tenant building (L00) · Ring 0/Ring 3 (L02) · Paging (L11) · ACLs (L22) · Containers (L27)</p>
+      </div>
+      <div class="card amber">
+        <h3>Speed vs. Safety</h3>
+        <p>TLB caching (L12) · Metadata journaling (L19) · C vs Rust (L24) · Containers vs VMs (L27)</p>
+      </div>
+      <div class="card emerald">
+        <h3>Simplicity vs. Flexibility</h3>
+        <p>Monolithic vs microkernel (L01) · Flat vs hierarchical FS (L17) · Char vs block devices (L21)</p>
+      </div>
+    </div>
+    <p class="subtitle" style="margin-top:4vh;max-width:900px">
+      These three tensions are the recurring theme of the entire course. Every lecture resolves them differently, but the tensions themselves never disappear — because they are fundamental to what an OS is.
+    </p>
+  </section>
+
+  <!-- ===== SLIDE 15 ===== -->
+  <section class="slide">
+    <span class="badge badge-violet">🔍 COMPREHENSIVE CRITIQUE: THE FIVE KERNEL PARADIGMS</span>
+    <h2>The Five Paradigms Introduction</h2>
+    <div class="card-grid grid-5" style="margin-top:3vh">
+      <div class="card"><h3>Monolithic</h3><p>All in Ring 0. Fastest, fragile.</p><p style="margin-top:1vh;color:#60A5FA">Linux · FreeBSD</p></div>
+      <div class="card"><h3>Microkernel</h3><p>Minimal Ring 0. Isolated, slower.</p><p style="margin-top:1vh;color:#60A5FA">seL4 · MINIX 3</p></div>
+      <div class="card"><h3>Layered</h3><p>Strict hierarchy. Elegant, rigid.</p><p style="margin-top:1vh;color:#60A5FA">THE (historical)</p></div>
+      <div class="card"><h3>Modular</h3><p>Monolithic core + LKMs.</p><p style="margin-top:1vh;color:#60A5FA">Linux + modules</p></div>
+      <div class="card"><h3>Hybrid</h3><p>Critical in Ring 0, risky in Ring 3.</p><p style="margin-top:1vh;color:#60A5FA">Windows NT · macOS XNU</p></div>
+    </div>
+    <p class="subtitle" style="margin-top:4vh">
+      Every lecture from L01 onward will compare how each paradigm resolves the current lecture's topic.
+    </p>
+  </section>
+
+  <!-- ===== SLIDE 16 ===== -->
+  <section class="slide">
+    <span class="badge badge-emerald">🏷️ SYSTEM LEXICON: MASTERING THE FOUNDATIONAL VOCABULARY</span>
+    <h2>Base OS Terms</h2>
+    <div class="card-grid grid-2" style="margin-top:3vh">
+      <div class="card">
+        <h3>Term 01 · Kernel</h3>
+        <p>The core program of the operating system that runs with complete architectural privileges (Ring 0) and remains resident in physical memory at all times; it manages all subsystems and provides the syscall interface.</p>
+        <p style="margin-top:1.5vh;color:#FBBF24;font-style:italic">(The air traffic controller in the tower — always present, always in control.)</p>
+      </div>
+      <div class="card">
+        <h3>Term 02 · Resource Manager</h3>
+        <p>The internal role of the OS dedicated to allocating hardware resources fairly and efficiently among competing tasks; the OS's primary arbitration responsibility.</p>
+        <p style="margin-top:1.5vh;color:#FBBF24;font-style:italic">(The hotel concierge — decides who gets which room, in what order.)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 17 ===== -->
+  <section class="slide">
+    <span class="badge badge-emerald">🏷️ SYSTEM LEXICON: MASTERING THE FOUNDATIONAL VOCABULARY</span>
+    <h2>Advanced OS Terms</h2>
+    <div class="card-grid grid-3" style="margin-top:3vh">
+      <div class="card">
+        <h3>Term 03 · Abstraction</h3>
+        <p>Hiding complex, low-level hardware details behind clean, universal software interfaces.</p>
+        <p style="margin-top:1.5vh;color:#FBBF24;font-style:italic">(The car dashboard — hides the engine, shows the speedometer.)</p>
+      </div>
+      <div class="card">
+        <h3>Term 04 · System Call</h3>
+        <p>The programmatic interface used by applications to request core kernel services; a controlled Ring 3 → Ring 0 transition triggered by a special instruction.</p>
+        <p style="margin-top:1.5vh;color:#FBBF24;font-style:italic">(The bank teller window — the only place you can request vault access.)</p>
+      </div>
+      <div class="card">
+        <h3>Term 05 · Multiprogramming</h3>
+        <p>An OS design strategy where multiple programs are kept in memory simultaneously, allowing the CPU to switch when one blocks on I/O.</p>
+        <p style="margin-top:1.5vh;color:#FBBF24;font-style:italic">(One runway, many planes — the tower rotates them so it's never idle.)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 18 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">💻 CODE DISSECTION: C OS INSPECTION PANEL</span>
+    <h2>Inspecting the OS from User Space</h2>
+    <pre class="code-block"><span class="cm">// Inspecting the OS from user space — a first glimpse under the hood</span>
+<span class="kw">#include</span> <span class="str">&lt;stdio.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;stdlib.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;unistd.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;sys/utsname.h&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;sys/sysinfo.h&gt;</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="cm">// --- Kernel identity ---</span>
+    <span class="kw">struct</span> utsname uts;
+    <span class="kw">if</span> (<span class="fn">uname</span>(&amp;uts) == <span class="num">0</span>) {
+        <span class="fn">printf</span>(<span class="str">"=== Operating System Identity ===\n"</span>);
+        <span class="fn">printf</span>(<span class="str">"  Kernel name:    %s\n"</span>, uts.sysname);
+        <span class="fn">printf</span>(<span class="str">"  Kernel release: %s\n"</span>, uts.release);
+        <span class="fn">printf</span>(<span class="str">"  Architecture:   %s\n"</span>, uts.machine);
+    }
+
+    <span class="cm">// --- Process identity (from Module 2's PCB) ---</span>
+    <span class="fn">printf</span>(<span class="str">"\n=== Process Identity ===\n"</span>);
+    <span class="fn">printf</span>(<span class="str">"  PID:   %d\n"</span>, <span class="fn">getpid</span>());
+    <span class="fn">printf</span>(<span class="str">"  PPID:  %d\n"</span>, <span class="fn">getppid</span>());
+    <span class="fn">printf</span>(<span class="str">"  UID:   %d\n"</span>, <span class="fn">getuid</span>());
+    <span class="fn">printf</span>(<span class="str">"  GID:   %d\n"</span>, <span class="fn">getgid</span>());
+
+    <span class="cm">// --- System resources (Module 3's memory manager) ---</span>
+    <span class="kw">struct</span> sysinfo si;
+    <span class="kw">if</span> (<span class="fn">sysinfo</span>(&amp;si) == <span class="num">0</span>) {
+        <span class="fn">printf</span>(<span class="str">"\n=== System Resources ===\n"</span>);
+        <span class="fn">printf</span>(<span class="str">"  Total RAM: %.2f GB\n"</span>,
+               (<span class="kw">double</span>)si.totalram * si.mem_unit / (<span class="num">1024.0</span> * <span class="num">1024</span> * <span class="num">1024</span>));
+        <span class="fn">printf</span>(<span class="str">"  Uptime:    %ld seconds\n"</span>, si.uptime);
+        <span class="fn">printf</span>(<span class="str">"  Processes: %d\n"</span>, si.procs);
+    }
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+    <p class="hint">Use code with caution.</p>
+  </section>
+
+  <!-- ===== SLIDE 19 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">💻 CODE DISSECTION: TRACING OS INSPECTION</span>
+    <h2>Walking the OS Inspection Trace</h2>
+    <div class="card-grid grid-2" style="margin-top:3vh">
+      <div class="card"><h3>uname(&amp;uts)</h3><p>Syscall into the kernel. Returns sysname, release, architecture — the OS talking about itself.</p></div>
+      <div class="card"><h3>getpid() · getppid()</h3><p>Syscalls into the process manager (Module 2). Reads fields directly from the caller's PCB.</p></div>
+      <div class="card"><h3>getuid() · getgid()</h3><p>Syscalls into the credential subsystem. These identity fields are consumed by access control (L22).</p></div>
+      <div class="card"><h3>sysinfo(&amp;si)</h3><p>Syscall into the memory manager (Module 3). Snapshot of total/free RAM and process count.</p></div>
+    </div>
+    <div class="callout" style="border-color:#3B82F6;background:rgba(59,130,246,0.06);color:#93C5FD;margin-top:3vh">
+      A program that runs entirely in user space still spends significant time in the kernel — every I/O operation, every resource query, every syscall is a controlled transition into Ring 0.
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 20 ===== -->
+  <section class="slide">
+    <span class="badge badge-violet">🎯 INTERACTIVE WORKSHOP: THE PROCESS REALITY CHECK</span>
+    <h2>The Live htop Inspection</h2>
+    <div class="accent-line" style="background:#8B5CF6"></div>
+    <div class="card-grid grid-3" style="margin-top:3vh">
+      <div class="card">
+        <h3>What to Do</h3>
+        <p>Instructor runs <code>htop</code> on the projector. Students act as process auditors — counting and categorizing running processes.</p>
+      </div>
+      <div class="card">
+        <h3>What You Will See</h3>
+        <p>280+ processes on the machine. At most 4–8 actively running on the physical cores. The rest are all waiting.</p>
+      </div>
+      <div class="card emerald">
+        <h3>The Big Question</h3>
+        <p>How many of these processes believe they own 100% of the machine? Answer: <strong>all of them</strong>.</p>
+      </div>
+    </div>
+    <p class="subtitle" style="margin-top:4vh;max-width:850px">
+      Without the OS, this would be chaos. Every process you see is a successfully negotiated illusion.
+    </p>
+  </section>
+
+  <!-- ===== SLIDE 21 ===== -->
+  <section class="slide">
+    <span class="badge badge-blue">💻 TRY IT LIVE: THE FIRST SYSTEM AUDIT</span>
+    <h2>Live Telemetry Audit</h2>
+    <pre class="terminal"><span class="cmd">$</span> uname -a                       <span class="out"># Kernel name and version</span>
+<span class="cmd">$</span> nproc                          <span class="out"># Number of CPU cores</span>
+<span class="cmd">$</span> free -h                        <span class="out"># Memory resources (Module 3)</span>
+<span class="cmd">$</span> df -h                          <span class="out"># Storage devices (Module 5)</span>
+<span class="cmd">$</span> htop                           <span class="out"># Live process view (Module 2)</span>
+<span class="cmd">$</span> ps aux | wc -l                 <span class="out"># Total process count</span>
+<span class="cmd">$</span> uptime                         <span class="out"># System load (Module 2's scheduler)</span>
+<span class="cmd">$</span> cat /proc/cpuinfo | grep "model name" | head -1
+<span class="cmd">$</span> cat /proc/meminfo | head -5    <span class="out"># Detailed memory info</span>
+<span class="cmd">$</span> ls /proc/                       <span class="out"># Kernel's view of itself</span></pre>
+    <p class="hint">Every file in /proc corresponds to a kernel data structure — the OS's self-portrait.</p>
+  </section>
+
+  <!-- ===== SLIDE 22 ===== -->
+  <section class="slide">
+    <span class="badge badge-emerald">🌿 NAVIGATION HUB: MASTER DESIGN SYSTEM MATRIX</span>
+    <h2>Master Mindmap Matrix</h2>
+    <pre class="mindmap">CS 301: Operating Systems Curriculum Portal
+  └── Module 1: OS Structure &amp; Design
+        └── <span class="active">L00: Course Introduction (ACTIVE NODE 🌟)</span>
+              ├── The OS as Resource Referee
+              └── Three Core Resources &amp; Six Kernel Subsystems</pre>
+    <p class="hint" style="margin-top:3vh">https://github.com</p>
+  </section>
+
+  <!-- ===== SLIDE 23 ===== -->
+  <section class="slide">
+    <span class="badge badge-amber">🏆 RETROSPECTIVE: SYLLABUS DISSECTION SUMMARY</span>
+    <h2>Grand Lecture Summary</h2>
+    <div class="takeaway-list" style="margin-top:3vh">
+      <div class="takeaway-item">
+        <div class="takeaway-num">01</div>
+        <p>The OS is the <strong>referee</strong> that arbitrates CPU time, memory, and storage among hundreds of independent processes. It is not a program that does user work; it enables user work.</p>
+      </div>
+      <div class="takeaway-item">
+        <div class="takeaway-num">02</div>
+        <p>The OS plays two inseparable roles: <strong>resource arbitrator</strong> and <strong>abstraction provider</strong>. Neither is possible without the other.</p>
+      </div>
+      <div class="takeaway-item">
+        <div class="takeaway-num">03</div>
+        <p>Every module of CS 301 is a detailed examination of one arbitration mechanism, unified by three recurring tensions: <strong>isolation vs. sharing</strong>, <strong>speed vs. safety</strong>, and <strong>simplicity vs. flexibility</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SLIDE 24 ===== -->
+  <section class="slide">
+    <span class="badge badge-emerald">🚀 THE HORIZON ROADMAP: MOVING TO THE NEXT BLOCK</span>
+    <h2>Next Unit Gateway</h2>
+    <div class="gateway-arrow">→</div>
+    <div class="callout" style="border-color:#10B981;background:rgba(16,185,129,0.06);color:#6EE7B7;max-width:900px;text-align:left">
+      <strong>Lecture 01 — The Architecture Matrix (Full Five-Paradigm Edition)</strong><br><br>
+      We have defined <em>what</em> the OS is and <em>what it does</em>. Now: <em>how is it structured</em>? We will compare the five fundamental kernel architectures — Monolithic, Microkernel, Layered, Modular, and Hybrid — through the Corporate Office Floorplan Showdown. We will see exactly what happens when a driver crashes in each paradigm, how IPC performance differs between them, and why Linux, macOS, and Windows all chose different structural designs.
+    </div>
+    <p class="hint">File: L01.html</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="go(-1)">←</button>
+  <span id="counter">01 / 24</span>
+  <button class="nav-btn" id="nextBtn" onclick="go(1)">→</button>
+</div>
+
+<div class="progress">
+  <div class="progress-bar" id="progressBar" style="width: 4.16%"></div>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  const progressBar = document.getElementById('progressBar');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  let current = 0;
+
+  function show(index) {
+    slides.forEach((s, i) => s.classList.toggle('active', i === index));
+    counter.textContent = String(index + 1).padStart(2, '0') + ' / ' + slides.length;
+    progressBar.style.width = ((index + 1) / slides.length * 100) + '%';
+    prevBtn.disabled = index === 0;
+    nextBtn.disabled = index === slides.length - 1;
+  }
+
+  function go(delta) {
+    current = Math.max(0, Math.min(slides.length - 1, current + delta));
+    show(current);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp') { e.preventDefault(); go(-1); }
+    if (e.key === 'Home') { e.preventDefault(); current = 0; show(current); }
+    if (e.key === 'End')  { e.preventDefault(); current = slides.length - 1; show(current); }
+  });
+
+  // Swipe support for iPad / touch
+  let touchX = null;
+  document.addEventListener('touchstart', (e) => { touchX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (dx < -50) go(1);
+    if (dx >  50) go(-1);
+    touchX = null;
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>
